@@ -1,0 +1,42 @@
+package parser
+
+type Parser Peg {
+    Command
+}
+
+root <- 
+    netns spaces operation EOT /
+    netns spaces operation <.+> {p.Err(begin, buffer)} EOT /
+    operation EOT { p.TargetType = NSNONE } /
+    <.+> {p.Err(begin, buffer)} EOT
+
+EOT <- !.
+
+netns <-
+	'docker' spaces netnsid {p.TargetType = DOCKER} /
+	'netns' spaces netnsid {p.TargetType = NETNS} /
+	'pid' spaces netnsid {p.TargetType = PID} 
+
+netnsid <- <[^ ]+>  {p.Target = text}
+
+operation <-
+	'route' spaces 'add' spaces network (spaces option)* {p.Operation = ROUTEADD} /
+	'route' spaces 'del' spaces network (spaces option)* {p.Operation = ROUTEDEL} /
+	'address' spaces 'add' spaces network spaces option {p.Operation = ADDRADD} /
+	'address' spaces 'del' spaces network spaces option {p.Operation = ADDRDEL}
+
+network <-
+	addrstr '/' len / {p.IsDefault = false}
+	'default' {p.IsDefault = true}
+
+addrstr <-
+	<[0-9a-fA-F:.]+> {p.Network = text}
+
+len <-
+	<[0-9]+> {p.NetworkLength = text}
+
+option <-
+	'via' spaces <[^ ]+> {p.SetOption("via", text)} /
+	'dev' spaces <[^ ]+> {p.SetOption("dev", text)}
+
+spaces <- ( ' ' / '\t' )*
