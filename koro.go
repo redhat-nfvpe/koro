@@ -12,9 +12,9 @@ import (
 	"github.com/vishvananda/netlink"
 	"strconv"
 	"strings"
+	"github.com/s1061123/koro/parser"
 	koko_api "github.com/redhat-nfvpe/koko/api"
 )
-import	"./parser"
 
 // getNamepace identify namespace from given cli option
 func getNamepace (command *parser.Command) (namespace string, err error) {

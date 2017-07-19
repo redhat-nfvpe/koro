@@ -2,8 +2,8 @@ package main
 
 import (
 	"testing"
+	"github.com/s1061123/koro/parser"
 )
-import	"./parser"
 
 func TestGetNetlinkRoute(t *testing.T) {
 	command1 := parser.Command{
