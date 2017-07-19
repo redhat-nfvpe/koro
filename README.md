@@ -1,4 +1,4 @@
-# koro: Container ROuting toolkit
+# koro: Container Routing toolkit
 
 # What is 'koro'?
 
