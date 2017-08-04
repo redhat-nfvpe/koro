@@ -58,7 +58,7 @@ func (c *Command) SetOption(name string, val string) {
 	}
 }
 
-func (c *Command) Err(pos int, buffer string) {
+func (c *Command) Err(pos int, buffer string, message string) {
     fmt.Println("")
     a := strings.Split(buffer[:pos], "\n")
     row := len(a) - 1
@@ -83,7 +83,11 @@ func (c *Command) Err(pos int, buffer string) {
     }
     fmt.Println(s)
 
-    fmt.Println("error")
+    if message != "" {
+        fmt.Println("Parse error: " +  message)
+    } else {
+	fmt.Print("Parse error")
+    }
     c.IsError = true
 }
 

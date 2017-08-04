@@ -6,28 +6,38 @@ type Parser Peg {
 
 root <- 
     netns spaces operation EOT /
-    netns spaces operation <.+> {p.Err(begin, buffer)} EOT /
-    operation EOT { p.TargetType = NSNONE } /
-    <.+> {p.Err(begin, buffer)} EOT
+    netns spaces <.+> {p.Err(begin, buffer, "")} EOT /
+    operation { p.TargetType = NSNONE } EOT /
+    <.+> {p.Err(begin, buffer, "")} EOT
 
 EOT <- !.
 
 netns <-
 	'docker' spaces netnsid {p.TargetType = DOCKER} /
 	'netns' spaces netnsid {p.TargetType = NETNS} /
-	'pid' spaces netnsid {p.TargetType = PID} 
+	'pid' spaces netnsid {p.TargetType = PID} /
+        <.+> {p.Err(begin, buffer, "Invalid namespace")} EOT
 
 netnsid <- <[^ ]+>  {p.Target = text}
 
 operation <-
 	'route' spaces 'add' spaces network (spaces option)* {p.Operation = ROUTEADD} /
 	'route' spaces 'del' spaces network (spaces option)* {p.Operation = ROUTEDEL} /
+	'route' spaces 'add' spaces network spaces <.+> {p.Err(begin, buffer, "Invalid option")} EOT /
+	'route' spaces 'add' spaces <.+> {p.Err(begin, buffer, "invalid network")} EOT /
+	'route' spaces 'del' spaces network spaces <.+> {p.Err(begin, buffer, "Invalid option")} EOT /
+	'route' spaces 'del' spaces <.+> {p.Err(begin, buffer, "Invalid network")} EOT /
+	'route' spaces <.+> {p.Err(begin, buffer, "")} EOT /
 	'address' spaces 'add' spaces network spaces option {p.Operation = ADDRADD} /
 	'address' spaces 'del' spaces network spaces option {p.Operation = ADDRDEL}
+	'address' spaces 'add' spaces network spaces <.+> {p.Err(begin, buffer, "Invalid option")} EOT /
+	'address' spaces 'add' spaces <.+> {p.Err(begin, buffer, "Invalid address")} EOT /
+	'address' spaces 'del' spaces network spaces <.+> {p.Err(begin, buffer, "Invalid option")} EOT /
+	'address' spaces 'del' spaces <.+> {p.Err(begin, buffer, "Invalid address")} EOT /
 
 network <-
-	addrstr '/' len / {p.IsDefault = false}
-	'default' {p.IsDefault = true}
+	addrstr '/' len {p.IsDefault = false} /
+	'default' {p.IsDefault = true} 
 
 addrstr <-
 	<[0-9a-fA-F:.]+> {p.Network = text}
