@@ -2,7 +2,7 @@ package main
 
 import (
 	"testing"
-	"github.com/s1061123/koro/parser"
+	"github.com/redhat-nfvpe/koro/parser"
 )
 
 func TestGetNetlinkRoute(t *testing.T) {

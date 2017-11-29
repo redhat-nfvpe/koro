@@ -12,7 +12,7 @@ import (
 	"github.com/vishvananda/netlink"
 	"strconv"
 	"strings"
-	"github.com/s1061123/koro/parser"
+	"github.com/redhat-nfvpe/koro/parser"
 	koko_api "github.com/redhat-nfvpe/koko/api"
 )
 

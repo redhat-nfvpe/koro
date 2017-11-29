@@ -11,7 +11,7 @@ any network namespace given by pid.
 `koro` is written in go, so following commands makes `koro` single binary.
 Build and put it in your container host.
 
-    git clone https://github.com/s1061123/koro.git
+    git clone https://github.com/redhat-nfvpe/koro.git
     cd koro
     go get
     go build
