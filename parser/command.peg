@@ -29,7 +29,7 @@ operation <-
 	'route' spaces 'del' spaces <.+> {p.Err(begin, buffer, "Invalid network")} EOT /
 	'route' spaces <.+> {p.Err(begin, buffer, "")} EOT /
 	'address' spaces 'add' spaces network spaces option {p.Operation = ADDRADD} /
-	'address' spaces 'del' spaces network spaces option {p.Operation = ADDRDEL}
+	'address' spaces 'del' spaces network spaces option {p.Operation = ADDRDEL} /
 	'address' spaces 'add' spaces network spaces <.+> {p.Err(begin, buffer, "Invalid option")} EOT /
 	'address' spaces 'add' spaces <.+> {p.Err(begin, buffer, "Invalid address")} EOT /
 	'address' spaces 'del' spaces network spaces <.+> {p.Err(begin, buffer, "Invalid option")} EOT /
