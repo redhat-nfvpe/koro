@@ -1,0 +1,37 @@
+language: go
+# see https://docs.travis-ci.com/user/reference/overview/#Virtualization-environments
+# for the detail
+sudo: requried
+dist: trusty
+
+before_install:
+  - sudo apt-get update -qq
+
+install:
+  - go get .
+  - go get github.com/golang/lint/golint
+
+before_script:
+  - go vet .
+  - golint . | xargs -r false
+
+script:
+  - go test 
+  - go build
+
+before_deploy:
+  - go get -u github.com/laher/goxc
+  - mkdir -p $TRAVIS_BUILD_DIR/dist
+  - goxc -d=$TRAVIS_BUILD_DIR/dist -pv=$TRAVIS_TAG -bc=linux -tasks=clean-destination,xc,archive,rmbin
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "lfekxFATALubKGHP5ZovNpwxTYE5qytHksPLsRnEDl/lBf6C8ZAYYKTK8DKUIxiZDLlKunMFMkNH8iQRVW+O4BotH0IKjB/ZT4HQtkRlxskUHmWKg38/tz04V/r33Uc0JpiNu/wufD7juk/8U3qOi2uzCxoF1uD9qocxFBB95NN57Ler2aj7mUwq31vL3tEnUpBGwcuC/vmh4+eyccw7eyE+cfMDTKjA+321Se6MqcGht2WRPx2XQ9CbUoXbgBDhoYupi2jpXd4HL4dTG7xGbRXaELyLEiONWb/YLThHipEeFNdGDt0rEqp72K0m+mavJJbr2n08PTeK6/VK8szjX/JY+tO0ZUSM3HzxkSndmRC1paU1xw/8ekh1p1XpoJeg1Guc8YKK5HIYF48U4vxQr9Jlkam/zm0xRvg2fn2CMyCVNca1V2C/bC9ag7hrDsBZ8ETADPHtNJtPMvZZOIzim8L6GTTd7Ib3jRjdeneGl/YBR+S2SwgXOCBnA3phW3UXfzRIOJ2iQfBT4HIF4tP4qrmAj/tUrZpscjFOZbCI6j0AYrGfmXnqibVSmDu8l+kI9QlBoe2Gt1VJU7s4F21u30oPC3J4iAm1R8l8Ve1HFHOCHTpnnLteaP76Z2pCMR2zkVTvVCCjBw0ia2M0fq3a5Lna59Js7sixq1YEE70v7dA="
+  file_glob: true
+  file: "$TRAVIS_BUILD_DIR/dist/**/*.gz"
+  on:
+    tags: true
+    all_branches: true
+    condition: "$TRAVIS_TAG =~ ^v[0-9].*$"
+  skip_cleanup: true
