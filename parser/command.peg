@@ -15,6 +15,7 @@ EOT <- !.
 netns <-
 	'docker' spaces netnsid {p.TargetType = DOCKER} /
 	'netns' spaces netnsid {p.TargetType = NETNS} /
+	'ipnetns' spaces netnsid {p.TargetType = IPNETNS} /
 	'pid' spaces netnsid {p.TargetType = PID} /
         <.+> {p.Err(begin, buffer, "Invalid namespace")} EOT
 

@@ -22,7 +22,7 @@ Build and put it in your container host.
     koro NS_SPEC route { add | del } ROUTE
 
     ROUTE := PREFIX NH
-    NS_SPEC := { docker NAME | netns NAME | pid PID }
+    NS_SPEC := { docker NAME | ipnetns NAME | netns NAME | pid PID }
     NH := [ via ADDRESS ] [ dev STRING ]
 
 # Example

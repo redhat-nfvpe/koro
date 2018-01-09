@@ -17,8 +17,9 @@ const (
 
 const (
 	DOCKER = iota
-	NETNS
+	IPNETNS
 	PID
+	NETNS
 	NSNONE
 )
 
