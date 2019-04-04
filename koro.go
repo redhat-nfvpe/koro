@@ -20,7 +20,7 @@ import (
 func getNamepace (command *parser.Command) (namespace string, err error) {
 	switch command.TargetType {
 	case parser.DOCKER:
-		namespace, err = koko_api.GetDockerContainerNS(command.Target)
+		namespace, err = koko_api.GetDockerContainerNS("", command.Target)
 	case parser.IPNETNS:
 		namespace = fmt.Sprintf("/var/run/netns/%s", command.Target)
 	case parser.NETNS:
